@@ -1,46 +1,29 @@
 pipeline {
     agent any
-
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                echo 'Building the project...'
+                git branch: 'main', url: 'https://github.com/ayushindapure/8.2CDevSecOps.git'
             }
         }
-
-        stage('Unit and Integration Tests') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Running unit and integration tests...'
+                sh 'npm install'
             }
         }
-
-        stage('Code Analysis') {
+        stage('Run Tests') {
             steps {
-                echo 'Running code analysis...'
+                sh 'npm test || true'
             }
         }
-
-        stage('Security Scan') {
+        stage('Generate Coverage Report') {
             steps {
-                echo 'Running security scan...'
+                sh 'npm run coverage || true'
             }
         }
-
-        stage('Deploy to Staging') {
+        stage('NPM Audit (Security Scan)') {
             steps {
-                echo 'Deploying to staging environment...'
-            }
-        }
-
-        stage('Integration Tests on Staging') {
-            steps {
-                echo 'Running integration tests on staging...'
-            }
-        }
-
-        stage('Deploy to Production') {
-            steps {
-                echo 'Deploying to production...'
+                sh 'npm audit || true'
             }
         }
     }
